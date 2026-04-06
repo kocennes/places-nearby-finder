@@ -1,0 +1,124 @@
+.places-list-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.places-list-section h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  color: #0f3460;
+}
+
+.place-count {
+  font-weight: 400;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.place-card {
+  display: flex;
+  gap: 0.75rem;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 0.9rem;
+  transition: box-shadow 0.2s;
+}
+
+.place-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.place-photo {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.place-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.place-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.place-address {
+  font-size: 0.8rem;
+  color: #777;
+  margin-bottom: 0.4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.place-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.4rem;
+}
+
+.stars {
+  color: #f59e0b;
+  font-size: 0.8rem;
+}
+
+.rating-value {
+  color: #555;
+  font-size: 0.75rem;
+}
+
+.open-status {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.open-status.open {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.open-status.closed {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.price-level {
+  font-size: 0.75rem;
+  color: #555;
+}
+
+.place-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.type-badge {
+  font-size: 0.68rem;
+  background: #f0f2f5;
+  color: #555;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: capitalize;
+}

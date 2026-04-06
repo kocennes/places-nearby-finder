@@ -1,0 +1,53 @@
+.map-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.map-card h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 1rem 1.5rem;
+  color: #0f3460;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.place-count {
+  font-weight: 400;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.map-loading,
+.map-error {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 0.95rem;
+}
+
+.map-error {
+  color: #dc2626;
+  background: #fee2e2;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.info-window {
+  font-size: 0.85rem;
+  max-width: 180px;
+}
+
+.info-window strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+}
+
+.info-window p {
+  margin: 2px 0;
+  color: #555;
+}

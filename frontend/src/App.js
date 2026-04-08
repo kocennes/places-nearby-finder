@@ -30,10 +30,10 @@ function App() {
       setSearched(true);
 
       if (results.length === 0) {
-        setError('No places found for the given location and radius.');
+        setError('Girilen konum ve yarıçap için herhangi bir yer bulunamadı.');
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to fetch nearby places. Check backend connection.');
+      setError(err.response?.data?.error || 'Yakın yerler getirilemdi. Backend bağlantısını kontorl edin.');
     } finally {
       setLoading(false);
     }
@@ -42,8 +42,8 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Nearby Places Explorer</h1>
-        <p>Enter coordinates and radius to discover nearby places</p>
+        <h1>Yakın Yer Bulucu</h1>
+        <p>Koordinat ve yarıçap girerek yakınındaki yerleri keşfet</p>
       </header>
 
       <main className="app-main">

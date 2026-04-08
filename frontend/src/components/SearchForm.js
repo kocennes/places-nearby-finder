@@ -13,13 +13,13 @@ function SearchForm({ onSearch, loading }) {
     const rad = parseInt(radius, 10);
 
     if (isNaN(lat) || lat < -90 || lat > 90) {
-      return 'Latitude must be between -90 and 90.';
+      return 'Enlem -90 ile 90 arasında olmalıdır.';
     }
     if (isNaN(lon) || lon < -180 || lon > 180) {
-      return 'Longitude must be between -180 and 180.';
+      return 'Boylam -180 ile 180 arasında olmalıdır.';
     }
     if (isNaN(rad) || rad < 1 || rad > 50000) {
-      return 'Radius must be between 1 and 50000 meters.';
+      return 'Yarıçap 1 ile 50000 metre arasında olmaldır.';
     }
     return null;
   };
@@ -41,7 +41,7 @@ function SearchForm({ onSearch, loading }) {
 
   const useCurrentLocation = () => {
     if (!navigator.geolocation) {
-      setValidationError('Geolocation is not supported by your browser.');
+      setValidationError('Tarayıcınz konum özelliğini desteklemiyor.');
       return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -49,17 +49,17 @@ function SearchForm({ onSearch, loading }) {
         setLatitude(pos.coords.latitude.toFixed(6));
         setLongitude(pos.coords.longitude.toFixed(6));
       },
-      () => setValidationError('Unable to retrieve your location.')
+      () => setValidationError('Konumunuz alınamadı.')
     );
   };
 
   return (
     <div className="search-card">
-      <h2>Search Nearby Places</h2>
+      <h2>Yakın Yer Ara</h2>
       <form className="search-form" onSubmit={handleSubmit}>
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="latitude">Latitude</label>
+            <label htmlFor="latitude">Enlem</label>
             <input
               id="latitude"
               type="number"
@@ -71,7 +71,7 @@ function SearchForm({ onSearch, loading }) {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="longitude">Longitude</label>
+            <label htmlFor="longitude">Boylam</label>
             <input
               id="longitude"
               type="number"
@@ -83,7 +83,7 @@ function SearchForm({ onSearch, loading }) {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="radius">Radius (meters)</label>
+            <label htmlFor="radius">Yarıçap (metre)</label>
             <input
               id="radius"
               type="number"
@@ -103,10 +103,10 @@ function SearchForm({ onSearch, loading }) {
 
         <div className="form-actions">
           <button type="button" className="btn-secondary" onClick={useCurrentLocation}>
-            Use My Location
+            Konumumu Kullan
           </button>
           <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? 'Searching...' : 'Search'}
+            {loading ? 'Aranıyor...' : 'Ara'}
           </button>
         </div>
       </form>

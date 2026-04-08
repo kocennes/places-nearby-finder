@@ -22,18 +22,18 @@ function PlacesMap({ places, center, radius }) {
   if (loadError) {
     return (
       <div className="map-error">
-        Google Maps failed to load. Check your API key in .env file.
+        Google Harita yüklenemdi. .env dosyasındaki API anahtarını kontrol edin.
       </div>
     );
   }
 
   if (!isLoaded) {
-    return <div className="map-loading">Loading map...</div>;
+    return <div className="map-loading">Harita yükleniyor...</div>;
   }
 
   return (
     <div className="map-card">
-      <h2>Map View <span className="place-count">({places.length} places)</span></h2>
+      <h2>Harita <span className="place-count">({places.length} yer)</span></h2>
       <GoogleMap
         mapContainerStyle={MAP_CONTAINER_STYLE}
         center={center}
@@ -43,7 +43,7 @@ function PlacesMap({ places, center, radius }) {
         {/* Search origin marker */}
         <Marker
           position={center}
-          title="Search Center"
+          title="Arama Merkezi"
           icon={{
             url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
           }}
@@ -88,10 +88,10 @@ function PlacesMap({ places, center, radius }) {
               <strong>{selectedPlace.name}</strong>
               <p>{selectedPlace.vicinity}</p>
               {selectedPlace.rating && (
-                <p>Rating: {selectedPlace.rating} / 5</p>
+                <p>Puan: {selectedPlace.rating} / 5</p>
               )}
               {selectedPlace.opening_hours && (
-                <p>{selectedPlace.opening_hours.open_now ? 'Open now' : 'Closed'}</p>
+                <p>{selectedPlace.opening_hours.open_now ? 'Şu an açık' : 'Kapalı'}</p>
               )}
             </div>
           </InfoWindow>

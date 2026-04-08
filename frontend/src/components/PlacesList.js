@@ -28,7 +28,7 @@ function PlaceCard({ place }) {
           {place.rating && <StarRating rating={place.rating} />}
           {place.opening_hours && (
             <span className={`open-status ${place.opening_hours.open_now ? 'open' : 'closed'}`}>
-              {place.opening_hours.open_now ? 'Open' : 'Closed'}
+              {place.opening_hours.open_now ? 'Açık' : 'Kapalı'}
             </span>
           )}
           {place.price_level !== undefined && (
@@ -52,7 +52,7 @@ function PlacesList({ places }) {
 
   return (
     <div className="places-list-section">
-      <h2>Results <span className="place-count">({places.length} places found)</span></h2>
+      <h2>Sonuçlar <span className="place-count">({places.length} yer bulundu)</span></h2>
       <div className="places-grid">
         {places.map((place) => (
           <PlaceCard key={place.place_id} place={place} />

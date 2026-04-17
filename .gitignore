@@ -14,6 +14,10 @@ frontend/.env
 .vscode/
 *.iml
 
+# Firebase
+.firebase/
+frontend/.firebaserc
+
 # OS
 .DS_Store
 Thumbs.db

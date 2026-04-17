@@ -36,7 +36,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("*")
+                // CORS_ALLOWED_ORIGIN env variable set edilmişse onu kullan (production),
+                // edilmemişse localhost:3000'e izin ver (development)
+                .allowedOriginPatterns(
+                        System.getenv().getOrDefault("CORS_ALLOWED_ORIGIN", "http://localhost:3000")
+                )
                 .allowedMethods("GET", "POST", "OPTIONS")
                 .allowedHeaders("*");
     }

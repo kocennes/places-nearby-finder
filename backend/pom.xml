@@ -4,6 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!--
+        Spring Boot Parent POM:
+        Tüm bağımlılıkların birbiriyle uyumlu versiyonlarını merkezi olarak yönetir.
+        Bağımlılıklara tek tek versiyon yazmamıza gerek kalmaz, parent halleder.
+    -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -11,6 +16,7 @@
         <relativePath/>
     </parent>
 
+    <!-- Projeyi tanımlayan koordinatlar -->
     <groupId>com.codexist</groupId>
     <artifactId>places-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -18,37 +24,80 @@
     <description>Nearby Places REST API</description>
 
     <properties>
+        <!-- Java 17 kullanıyoruz. Spring Boot 3.x minimum Java 17 gerektirir -->
         <java.version>17</java.version>
     </properties>
 
     <dependencies>
+
+        <!--
+            Spring MVC + gömülü Tomcat sunucusu.
+            REST controller yazabilmek ve uygulamayı ayağa kaldırabilmek için gerekli.
+            Ayrı bir sunucuya deploy etmeye gerek kalmaz, JAR olarak çalışır.
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <!--
+            Spring Data JPA + Hibernate.
+            Veritabanı işlemleri için SQL yazmak yerine repository interface'leri
+            ve method naming convention kullanmamızı sağlar.
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
+        <!--
+            H2 in-memory/file veritabanı.
+            scope=runtime: sadece çalışma zamanında gerekli, derleme sırasında kullanılmaz.
+            File-based modda kullandık (jdbc:h2:file:...) yani uygulama kapansa da
+            cache verisi kaybolmaz.
+        -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!--
+            Lombok kod üretme kütüphanesi.
+            optional=true: bu projeye bağımlı başka bir proje olsa Lombok'u ona taşımaz.
+            @Data      → getter, setter, equals, hashCode, toString üretir
+            @Builder   → builder pattern üretir
+            @NoArgsConstructor / @AllArgsConstructor → constructor üretir
+            Derleme sonrası byte code'a işlenir, runtime'da ihtiyaç yoktur (build'den exclude edilir).
+        -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!--
+            Spring Boot test altyapısı (JUnit 5, Mockito, AssertJ).
+            scope=test: sadece test kodlarında kullanılır, üretim JAR'ına girmez.
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
+            <!--
+                Spring Boot Maven Plugin:
+                "mvn spring-boot:run" komutuyla uygulamayı doğrudan çalıştırır.
+                "mvn package" ile tüm bağımlılıkları içeren çalıştırılabilir fat JAR üretir.
+
+                Lombok build sırasında kullanılır ama üretilen JAR'a dahil edilmesi gerekmez,
+                bu yüzden exclude bloğuyla JAR'dan çıkarılıyor.
+            -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -63,4 +112,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

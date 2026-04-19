@@ -5,26 +5,14 @@ import PlacesMap from './components/PlacesMap';
 import PlacesList from './components/PlacesList';
 import './App.css';
 
-// Backend URL'si environment variable'dan okunur, tanımlı değilse localhost'a düşer
 const API_BASE = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8070';
 
-/**
- * Uygulamanın ana bileşeni. Tüm state burada tutulur ve
- * alt bileşenlere props olarak iletilir (state lifting pattern).
- *
- * Bileşen ağacı:
- *   App
- *   ├── SearchForm   → kullanıcıdan lat/lon/radius alır
- *   ├── PlacesMap    → Google Maps üzerinde sonuçları gösterir
- *   └── PlacesList   → sonuçları kart listesi olarak gösterir
- */
 function App() {
   const [places, setPlaces] = useState([]);
-  const [center, setCenter] = useState({ lat: 41.0082, lng: 28.9784 }); // İstanbul varsayılan
+  const [center, setCenter] = useState({ lat: 41.0082, lng: 28.9784 });
   const [radius, setRadius] = useState(1000);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  // İlk açılışta harita görünmesin diye — ilk arama yapılınca true olur
   const [searched, setSearched] = useState(false);
 
   const handleSearch = async ({ latitude, longitude, radius: nextRadius }) => {
@@ -32,12 +20,10 @@ function App() {
     setError(null);
 
     try {
-      // axios params objesi query string'e otomatik dönüşür
       const { data } = await axios.get(`${API_BASE}/api/nearby`, {
         params: { latitude, longitude, radius: nextRadius },
       });
 
-      // Google Places API yanıtı { results: [...], status: "OK" } formatında gelir
       const results = data.results || [];
       setPlaces(results);
       setCenter({ lat: latitude, lng: longitude });

@@ -1,51 +1,33 @@
 import { useState } from 'react';
 import './SearchForm.css';
 
-/**
- * Kullanıcının arama parametrelerini girdiği form bileşeni.
- *
- * Props:
- *   onSearch(params) → arama yapılınca App.js'deki handleSearch'ü tetikler
- *   loading          → istek süresince butonu devre dışı bırakmak için
- */
 function SearchForm({ onSearch, loading }) {
-  // Her input alanı için ayrı state — controlled component pattern
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [radius, setRadius] = useState('');
   const [validationError, setValidationError] = useState('');
 
-  // Form gönderilmeden önce değerlerin geçerliliğini kontrol eder
   const validate = () => {
     const lat = parseFloat(latitude);
     const lon = parseFloat(longitude);
     const rad = parseInt(radius, 10);
 
-    if (isNaN(lat) || lat < -90 || lat > 90) {
-      return 'Enlem -90 ile 90 arasinda olmalidir.';
-    }
-    if (isNaN(lon) || lon < -180 || lon > 180) {
-      return 'Boylam -180 ile 180 arasinda olmalidir.';
-    }
-    // Google Places API maksimum 50000 metre yarıçap kabul eder
-    if (isNaN(rad) || rad < 1 || rad > 50000) {
-      return 'Yaricap 1 ile 50000 metre arasinda olmalidir.';
-    }
+    if (isNaN(lat) || lat < -90 || lat > 90) return 'Enlem -90 ile 90 arasinda olmalidir.';
+    if (isNaN(lon) || lon < -180 || lon > 180) return 'Boylam -180 ile 180 arasinda olmalidir.';
+    if (isNaN(rad) || rad < 1 || rad > 50000) return 'Yaricap 1 ile 50000 metre arasinda olmalidir.';
 
     return null;
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Sayfanın yenilenmesini engeller
+    e.preventDefault();
     const err = validate();
-
     if (err) {
       setValidationError(err);
       return;
     }
 
     setValidationError('');
-    // String olan input değerlerini sayıya dönüştürüp gönder
     onSearch({
       latitude: parseFloat(latitude),
       longitude: parseFloat(longitude),
@@ -53,7 +35,6 @@ function SearchForm({ onSearch, loading }) {
     });
   };
 
-  // Tarayıcının Geolocation API'sini kullanarak koordinatları otomatik doldurur
   const useCurrentLocation = () => {
     if (!navigator.geolocation) {
       setValidationError('Tarayiciniz konum ozelligini desteklemiyor.');
@@ -62,7 +43,6 @@ function SearchForm({ onSearch, loading }) {
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        // toFixed(6) → 6 ondalık basamak, metre düzeyinde hassasiyet
         setLatitude(pos.coords.latitude.toFixed(6));
         setLongitude(pos.coords.longitude.toFixed(6));
       },
@@ -77,7 +57,6 @@ function SearchForm({ onSearch, loading }) {
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="latitude">Enlem</label>
-            {/* step="any" ondalıklı sayı girişine izin verir */}
             <input
               id="latitude"
               type="number"
@@ -123,7 +102,6 @@ function SearchForm({ onSearch, loading }) {
           <button type="button" className="btn-secondary" onClick={useCurrentLocation}>
             Konumumu Kullan
           </button>
-          {/* disabled={loading} çift gönderimi engeller */}
           <button type="submit" className="btn-primary" disabled={loading}>
             {loading ? 'Araniyor...' : 'Ara'}
           </button>

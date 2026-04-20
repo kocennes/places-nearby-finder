@@ -28,13 +28,11 @@ public class PlacesController {
 
     /**
      * Verilen koordinat ve yarıçap için yakındaki yerleri döner.
-     *
-     * Örnek istek: GET /api/nearby?latitude=41.0082&longitude=28.9784&radius=1000
+     * Örnek: GET /api/nearby?latitude=41.0082&longitude=28.9784&radius=1000
      *
      * @param latitude  Merkez noktanın enlemi (-90 ile 90 arası)
      * @param longitude Merkez noktanın boylamı (-180 ile 180 arası)
-     * @param radius    Arama yarıçapı (metre cinsinden, max 50000)
-     * @return Google Places API'den gelen ham JSON yanıtı
+     * @param radius    Arama yarıçapı metre cinsinden (max 50000)
      */
     @GetMapping(value = "/nearby", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getNearbyPlaces(

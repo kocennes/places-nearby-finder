@@ -1,68 +1,94 @@
 # Nearby Places Explorer
 
-Full-stack application to find nearby places using Google Places API.
+Google Places API kullanan Spring Boot + React uygulaması.
 
-## Architecture
+## Teknolojiler
+- Backend: Spring Boot 3.2.4 (Java 17+, port 8070)
+- Frontend: React 18
+- Deploy: Cloud Run + Firebase Hosting
 
-```
-frontend/   → React.js (port 3000)
-backend/    → Spring Boot Java 17 (port 8070)
-```
+## Dizinler
+- `backend/`
+- `frontend/`
 
-## Quick Start
-
-### Prerequisites
+## Gereksinimler
 - Java 17+
+- Maven veya mvnd
 - Node.js 18+
-- Maven 3.8+
-- Google API Key with **Places API** and **Maps JavaScript API** enabled
+- `gcloud` CLI
+- `firebase` CLI
+
+## Ortam Değişkenleri
 
 ### Backend
+- `GOOGLE_API_KEY`
+- `CORS_ALLOWED_ORIGIN`
 
+### Frontend (`frontend/.env`)
+```env
+REACT_APP_GOOGLE_MAPS_API_KEY=YOUR_BROWSER_KEY
+REACT_APP_API_BASE_URL=http://localhost:8070
+```
+
+## Lokal Çalıştırma
+
+### Backend
 ```bash
 cd backend
-export GOOGLE_API_KEY=your_key_here          # Linux/Mac
-# set GOOGLE_API_KEY=your_key_here           # Windows CMD
+# Linux/Mac
+export GOOGLE_API_KEY=YOUR_SERVER_KEY
+# Windows PowerShell
+# $env:GOOGLE_API_KEY="YOUR_SERVER_KEY"
 mvn spring-boot:run
 ```
 
-API available at: `http://localhost:8070/api/nearby?latitude=41.0082&longitude=28.9784&radius=1000`
-
-H2 Console (dev): `http://localhost:8070/h2-console`
+Test:
+- `http://localhost:8070/api/nearby?latitude=41.0082&longitude=28.9784&radius=1000`
 
 ### Frontend
-
 ```bash
 cd frontend
-cp .env.example .env
-# Edit .env and add your API keys
 npm install
 npm start
 ```
 
-App available at: `http://localhost:3000`
+## API
 
-## API Reference
+`GET /api/nearby`
 
-### GET /api/nearby
+Parametreler:
+- `latitude` (double)
+- `longitude` (double)
+- `radius` (int, max 50000)
 
-| Parameter  | Type   | Description                        |
-|------------|--------|------------------------------------|
-| latitude   | double | Latitude of center point           |
-| longitude  | double | Longitude of center point          |
-| radius     | int    | Search radius in meters (max 50000)|
+## Deploy
 
-**Example:**
+### Backend (Cloud Run)
+```bash
+gcloud auth login
+gcloud config set project <PROJECT_ID>
+
+cd backend
+gcloud run deploy places-api \
+  --source . \
+  --region europe-west1 \
+  --allow-unauthenticated \
+  --port 8070 \
+  --set-env-vars GOOGLE_API_KEY=<SERVER_KEY>,CORS_ALLOWED_ORIGIN=<FRONTEND_URL>
 ```
-GET http://localhost:8070/api/nearby?latitude=41.0082&longitude=28.9784&radius=1000
+
+Not: Backend kök URL (`/`) 404 dönebilir, normaldir. Kontrol için `/api/nearby` kullanın.
+
+### Frontend (Firebase Hosting)
+```bash
+cd frontend
+npm install
+npm run build
+firebase login
+firebase deploy --only hosting --project <PROJECT_ID>
 ```
 
-## Caching
-
-Responses are cached in H2 database (file-based, persists between restarts).  
-Same `latitude + longitude + radius` combination returns cached result instantly.
-
-## Deployment
-
-- Backend: Deploy JAR to any Java host (Railway, Render, AWS EC2)  
-- Frontend: `npm run build` → deploy to Vercel / Netlify / GitHub Pages
+## Canlı Linkler
+- Frontend: `https://annular-climate-479621-b1.web.app`
+- Backend: `https://places-api-836010176582.europe-west1.run.app`
+- Backend test: `https://places-api-836010176582.europe-west1.run.app/api/nearby?latitude=41.0082&longitude=28.9784&radius=500`

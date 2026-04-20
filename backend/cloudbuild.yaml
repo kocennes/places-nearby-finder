@@ -1,19 +1,10 @@
 steps:
-  # Adım 1: Docker imajını build et
   - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'build'
-      - '-t'
-      - 'gcr.io/$PROJECT_ID/places-api'
-      - '.'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/places-api', '.']
 
-  # Adım 2: İmajı Google Container Registry'ye push et
   - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'push'
-      - 'gcr.io/$PROJECT_ID/places-api'
+    args: ['push', 'gcr.io/$PROJECT_ID/places-api']
 
-  # Adım 3: Cloud Run'a deploy et
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -27,7 +18,6 @@ steps:
       - '--port=8070'
       - '--set-env-vars=GOOGLE_API_KEY=$_GOOGLE_API_KEY,CORS_ALLOWED_ORIGIN=$_CORS_ALLOWED_ORIGIN'
 
-# Cloud Build trigger'dan geçirilecek değişkenler
 substitutions:
   _GOOGLE_API_KEY: ''
   _CORS_ALLOWED_ORIGIN: ''

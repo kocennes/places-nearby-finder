@@ -1,6 +1,13 @@
 package com.codexist.places.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+
 import java.time.LocalDateTime;
 
 /**
@@ -26,11 +33,12 @@ public class PlacesCache {
     @Column(nullable = false)
     private Double longitude;
 
-    // Arama yarıçapı (metre) — cache key'in bir parçası
+    // Arama yarıçapı (metre) — latitude+longitude+radius üçlüsü unique bir sorguyu tanımlar
     @Column(nullable = false)
     private Integer radius;
 
-    // Google Places API'den gelen ham JSON yanıtı
+    // Google Places API'den gelen ham JSON yanıtı.
+    // TEXT tipi kullandık çünkü VARCHAR(255) uzun JSON string'leri için yetersiz kalır.
     @Column(nullable = false, columnDefinition = "TEXT")
     private String responseJson;
 
@@ -38,25 +46,24 @@ public class PlacesCache {
     private LocalDateTime createdAt;
 
     // JPA için parametresiz constructor zorunlu
-    public PlacesCache() {}
+    public PlacesCache() {
+    }
 
-    private PlacesCache(Builder builder) {
-        this.latitude = builder.latitude;
-        this.longitude = builder.longitude;
-        this.radius = builder.radius;
-        this.responseJson = builder.responseJson;
+    public PlacesCache(Double latitude, Double longitude, Integer radius, String responseJson) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.radius = radius;
+        this.responseJson = responseJson;
     }
 
     /**
      * JPA entity ilk kez kaydedilmeden önce otomatik çalışır.
-     * createdAt alanını elle set etmeye gerek kalmaz.
+     * createdAt alanını elle set etmeye gerek kalmaz, her zaman doğru anı yazar.
      */
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
-
-    // --- Getters ---
 
     public Long getId() { return id; }
     public Double getLatitude() { return latitude; }
@@ -64,35 +71,4 @@ public class PlacesCache {
     public Integer getRadius() { return radius; }
     public String getResponseJson() { return responseJson; }
     public LocalDateTime getCreatedAt() { return createdAt; }
-
-    // --- Setters ---
-
-    public void setId(Long id) { this.id = id; }
-    public void setLatitude(Double latitude) { this.latitude = latitude; }
-    public void setLongitude(Double longitude) { this.longitude = longitude; }
-    public void setRadius(Integer radius) { this.radius = radius; }
-    public void setResponseJson(String responseJson) { this.responseJson = responseJson; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    // --- Builder pattern ---
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-        private Double latitude;
-        private Double longitude;
-        private Integer radius;
-        private String responseJson;
-
-        public Builder latitude(Double latitude) { this.latitude = latitude; return this; }
-        public Builder longitude(Double longitude) { this.longitude = longitude; return this; }
-        public Builder radius(Integer radius) { this.radius = radius; return this; }
-        public Builder responseJson(String responseJson) { this.responseJson = responseJson; return this; }
-
-        public PlacesCache build() {
-            return new PlacesCache(this);
-        }
-    }
 }

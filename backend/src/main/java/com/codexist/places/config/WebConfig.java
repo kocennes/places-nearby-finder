@@ -1,5 +1,6 @@
 package com.codexist.places.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +17,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    // CORS_ALLOWED_ORIGIN env variable set edilmişse onu kullan (production),
+    // edilmemişse localhost:3000'e izin ver (development)
+    @Value("${CORS_ALLOWED_ORIGIN:http://localhost:3000}")
+    private String corsAllowedOrigin;
+
     /**
      * Spring'in dependency injection container'ına RestTemplate örneği ekler.
      * PlacesService bu bean'i constructor injection ile alır ve dış API çağrılarında kullanır.
@@ -27,20 +33,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * /api/** altındaki tüm endpoint'ler için CORS başlıklarını ayarlar.
-     * Tarayıcı, farklı origin'den (örn. localhost:3000) gelen istekleri
-     * bu izin olmadan engeller.
-     *
-     * NOT: allowedOrigins("*") sadece development içindir.
-     * Production'da belirli domain yazılmalıdır: .allowedOrigins("https://domain.com")
+     * Tarayıcı, farklı origin'den gelen istekleri bu izin olmadan engeller.
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                // CORS_ALLOWED_ORIGIN env variable set edilmişse onu kullan (production),
-                // edilmemişse localhost:3000'e izin ver (development)
-                .allowedOriginPatterns(
-                        System.getenv().getOrDefault("CORS_ALLOWED_ORIGIN", "http://localhost:3000")
-                )
+                .allowedOriginPatterns(corsAllowedOrigin)
                 .allowedMethods("GET", "POST", "OPTIONS")
                 .allowedHeaders("*");
     }

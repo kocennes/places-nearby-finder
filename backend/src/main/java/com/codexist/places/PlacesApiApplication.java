@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * Uygulamanın başlangıç noktası.
  *
- * @SpringBootApplication anotasyonu üç şeyi bir arada yapar:
- * - @Configuration: bu sınıf Spring bean tanımlarına kaynak olabilir
- * - @EnableAutoConfiguration: Spring Boot'un classpath'e göre otomatik yapılandırma yapmasını sağlar
- * - @ComponentScan: bu paketin altındaki tüm @Component, @Service, @Repository vs. sınıfları tarar
+ * @SpringBootApplication üç anotasyonu bir arada sağlar:
+ * - @Configuration: Spring bean tanımlarına kaynak olabilir
+ * - @EnableAutoConfiguration: classpath'e göre otomatik yapılandırma yapar
+ * - @ComponentScan: bu paketin altındaki tüm @Component, @Service, @Repository sınıfları tarar
  */
 @SpringBootApplication
 public class PlacesApiApplication {

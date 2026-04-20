@@ -63,20 +63,6 @@
         </dependency>
 
         <!--
-            Lombok kod üretme kütüphanesi.
-            optional=true: bu projeye bağımlı başka bir proje olsa Lombok'u ona taşımaz.
-            @Data      → getter, setter, equals, hashCode, toString üretir
-            @Builder   → builder pattern üretir
-            @NoArgsConstructor / @AllArgsConstructor → constructor üretir
-            Derleme sonrası byte code'a işlenir, runtime'da ihtiyaç yoktur (build'den exclude edilir).
-        -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!--
             Spring Boot test altyapısı (JUnit 5, Mockito, AssertJ).
             scope=test: sadece test kodlarında kullanılır, üretim JAR'ına girmez.
         -->
@@ -101,14 +87,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
             </plugin>
         </plugins>
     </build>

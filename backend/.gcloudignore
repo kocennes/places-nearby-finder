@@ -1,0 +1,19 @@
+# Keep Cloud Run source uploads minimal and avoid local runtime/build artifacts.
+.git
+.gitignore
+.gcloudignore
+
+# Maven/build outputs
+target/
+
+# Local H2 database files
+data/
+*.mv.db
+*.trace.db
+
+# IDE/system files
+.idea/
+.vscode/
+*.iml
+Thumbs.db
+.DS_Store

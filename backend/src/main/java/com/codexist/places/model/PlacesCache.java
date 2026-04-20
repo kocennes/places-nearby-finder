@@ -1,11 +1,6 @@
 package com.codexist.places.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 /**
@@ -14,22 +9,11 @@ import java.time.LocalDateTime;
  * Her kayıt bir Google Places API sorgusuna karşılık gelir.
  * Aynı lat+lon+radius kombinasyonu tekrar istendiğinde Google'a gidilmez,
  * bu tablodan döndürülür.
- *
- * Lombok anotasyonları derleme sırasında kod üretir:
- * @Data             → tüm alanlar için getter/setter + equals/hashCode/toString
- * @Builder          → PlacesCache.builder()...build() şeklinde nesne oluşturmayı sağlar
- * @NoArgsConstructor → JPA'nın entity'yi yüklemesi için parametresiz constructor gerekir
- * @AllArgsConstructor → @Builder ile birlikte çalışması için tüm alanlı constructor üretir
  */
 @Entity
 @Table(name = "places_cache")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class PlacesCache {
 
-    // Otomatik artan birincil anahtar, her kayıt için benzersiz ID üretir
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,29 +27,72 @@ public class PlacesCache {
     private Double longitude;
 
     // Arama yarıçapı (metre) — cache key'in bir parçası
-    // latitude + longitude + radius üçlüsü birlikte unique bir sorguyu tanımlar
     @Column(nullable = false)
     private Integer radius;
 
-    /*
-     * Google Places API'den gelen ham JSON yanıtı.
-     * columnDefinition = "TEXT" → uzun JSON string'leri için VARCHAR(255) yeterli olmaz,
-     * TEXT tipi sınırsız uzunlukta veri saklar.
-     * Parse etmeden ham halde sakladık çünkü frontend zaten JSON bekliyor.
-     */
+    // Google Places API'den gelen ham JSON yanıtı
     @Column(nullable = false, columnDefinition = "TEXT")
     private String responseJson;
 
-    // Kaydın ne zaman oluşturulduğunu tutar
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    // JPA için parametresiz constructor zorunlu
+    public PlacesCache() {}
+
+    private PlacesCache(Builder builder) {
+        this.latitude = builder.latitude;
+        this.longitude = builder.longitude;
+        this.radius = builder.radius;
+        this.responseJson = builder.responseJson;
+    }
+
     /**
-     * JPA entity ilk kez kaydedilmeden (@PrePersist) önce otomatik çalışır.
-     * createdAt alanını elle set etmeye gerek kalmaz, her zaman doğru anı yazar.
+     * JPA entity ilk kez kaydedilmeden önce otomatik çalışır.
+     * createdAt alanını elle set etmeye gerek kalmaz.
      */
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+    }
+
+    // --- Getters ---
+
+    public Long getId() { return id; }
+    public Double getLatitude() { return latitude; }
+    public Double getLongitude() { return longitude; }
+    public Integer getRadius() { return radius; }
+    public String getResponseJson() { return responseJson; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+
+    // --- Setters ---
+
+    public void setId(Long id) { this.id = id; }
+    public void setLatitude(Double latitude) { this.latitude = latitude; }
+    public void setLongitude(Double longitude) { this.longitude = longitude; }
+    public void setRadius(Integer radius) { this.radius = radius; }
+    public void setResponseJson(String responseJson) { this.responseJson = responseJson; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    // --- Builder pattern ---
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Double latitude;
+        private Double longitude;
+        private Integer radius;
+        private String responseJson;
+
+        public Builder latitude(Double latitude) { this.latitude = latitude; return this; }
+        public Builder longitude(Double longitude) { this.longitude = longitude; return this; }
+        public Builder radius(Integer radius) { this.radius = radius; return this; }
+        public Builder responseJson(String responseJson) { this.responseJson = responseJson; return this; }
+
+        public PlacesCache build() {
+            return new PlacesCache(this);
+        }
     }
 }
